@@ -38,6 +38,11 @@ const startServer = async () => {
     app.listen(port, () => {
       console.log(`App is running on PORT: ${port}`);
     });
+
+    process.on("SIGINT", async () => {
+      console.log("Received SIGINT. Shutting down gracefully...");
+      await db.close();
+    });
   } catch (err) {
     console.error("Failed to start server:", err);
   }
