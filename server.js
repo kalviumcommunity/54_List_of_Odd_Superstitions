@@ -1,4 +1,7 @@
 const express = require("express");
+const env = require("dotenv").config();
+const { connectToMongoDB } = require("./db");
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -7,18 +10,44 @@ const errorHandler = (err, req, res, next) => {
   res.status(500).send(err.message);
 };
 
-app.route("/ping").get((req, res, next) => {
+let db;
+
+const startServer = async () => {
   try {
-    res.send("pong");
+    db = await connectToMongoDB();
+
+    app.get("/", (req, res) => {
+      const isConnected = db ? true : false;
+      res.send(
+        `Database connection Status: ${
+          isConnected ? "Database is connected" : "Database is not connected"
+        }`
+      );
+    });
+
+    app.route("/ping").get((req, res, next) => {
+      try {
+        res.send("pong");
+      } catch (err) {
+        next(err);
+      }
+    });
+
+    app.use(errorHandler);
+
+    app.listen(port, () => {
+      console.log(`App is running on PORT: ${port}`);
+    });
+
+    process.on("SIGINT", async () => {
+      console.log("Received SIGINT. Shutting down gracefully...");
+      await db.close();
+    });
   } catch (err) {
-    next(err);
+    console.error("Failed to start server:", err);
   }
-});
+};
 
-app.use(errorHandler);
-
-app.listen(port, () => {
-  console.log(`App is running on PORT: ${port}`);
-});
+startServer();
 
 module.exports = app;
