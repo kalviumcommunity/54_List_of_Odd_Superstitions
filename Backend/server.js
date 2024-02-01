@@ -1,6 +1,7 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const env = require("dotenv").config();
+const { connectToMongoDB } = require("./db");
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -11,41 +12,35 @@ const errorHandler = (err, req, res, next) => {
 
 let db;
 
-const connectToMongoDB = async () => {
-  try {
-    await mongoose.connect(process.env.mongoUri);
-    console.log("Connected to MongoDB.🚀");
-    db = mongoose.connection;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 const startServer = async () => {
-  await connectToMongoDB();
+  try {
+    db = await connectToMongoDB();
 
-  app.get("/", (req, res) => {
-    const isConnected = db ? true : false;
-    res.send(
-      `Database connection Status: ${
-        isConnected ? "Connected" : "Disconnected"
-      }`
-    );
-  });
+    app.get("/", (req, res) => {
+      const isConnected = db ? true : false;
+      res.send(
+        `Database connection Status: ${
+          isConnected ? "Database is connected" : "Database is not connected"
+        }`
+      );
+    });
 
-  app.route("/ping").get((req, res, next) => {
-    try {
-      res.send("pong");
-    } catch (err) {
-      next(err);
-    }
-  });
+    app.route("/ping").get((req, res, next) => {
+      try {
+        res.send("pong");
+      } catch (err) {
+        next(err);
+      }
+    });
 
-  app.use(errorHandler);
+    app.use(errorHandler);
 
-  app.listen(port, () => {
-    console.log(`App is running on PORT: ${port}`);
-  });
+    app.listen(port, () => {
+      console.log(`App is running on PORT: ${port}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+  }
 };
 
 startServer();
