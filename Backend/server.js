@@ -19,7 +19,7 @@ const startServer = async () => {
       const isConnected = db ? true : false;
       res.send(
         `Database connection Status: ${
-          isConnected ? "Database is connected" : "Database is not connected"
+          isConnected ? "Database is connected 🚀" : "Database is not connected 😓"
         }`
       );
     });
