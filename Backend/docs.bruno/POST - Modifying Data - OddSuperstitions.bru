@@ -1,0 +1,18 @@
+meta {
+  name: POST - Modifying Data - OddSuperstitions
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/superstition
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Walking Under a Ladder",
+    "description": "The superstition of not wanting to walk under a ladder also has roots in Christian symbolism: the “Holy Trinity” of the Father, the Son, and the Holy Spirit led to an association of the number three with something sacred. The triangle, with its three sides, came to be regarded as sacred as well, and a ladder of course forms a triangle, so, naturally, to walk under that ladder would be to destroy the sanctity of the Trinity and thus incur punishment."
+  }
+}

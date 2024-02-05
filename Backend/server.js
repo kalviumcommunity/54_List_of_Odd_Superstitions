@@ -4,6 +4,8 @@ const { connectToMongoDB } = require("./db");
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(express.json());
+
 const errorHandler = (err, req, res, next) => {
   console.log(err);
   res.status(500).send(err.message);
@@ -19,7 +21,9 @@ const startServer = async () => {
       const isConnected = db ? true : false;
       res.send(
         `Database connection Status: ${
-          isConnected ? "Database is connected 🚀" : "Database is not connected 😓"
+          isConnected
+            ? "Database is connected 🚀"
+            : "Database is not connected 😓"
         }`
       );
     });
@@ -34,6 +38,9 @@ const startServer = async () => {
 
     app.use(errorHandler);
 
+    const SuperstitionRoute = require("./routes");
+    app.use("/superstition", SuperstitionRoute);
+
     app.listen(port, () => {
       console.log(`App is running on PORT: ${port}`);
     });
@@ -43,7 +50,7 @@ const startServer = async () => {
       await db.close();
     });
   } catch (err) {
-    console.error("Failed to start server:", err);
+    console.error("Failed to start server:", err.message);
   }
 };
 
