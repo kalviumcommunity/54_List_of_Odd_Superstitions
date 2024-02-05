@@ -8,9 +8,13 @@ app.use(express.json());
 router.get("/", async (req, res) => {
   try {
     const getSuperstition = await schema.find({});
-    res.status(200).send(getSuperstition);
+    if (getSuperstition.length > 0) {
+      res.status(200).send(getSuperstition);
+    } else {
+      res.status(404).send("No superstitions found.");
+    }
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(500).send("Internal Server Error. Please try again later 😓.");
   }
 });
 
@@ -21,8 +25,7 @@ router.post("/", async (req, res) => {
     if (newSuperstition) {
       res.status(201).json(newSuperstition);
     } else {
-      res.status(400);
-      throw new Error("Failed to Create new Superstition...");
+      res.status(500).send("Failed to create new superstition.");
     }
   } catch (err) {
     console.error(err.message);
@@ -34,9 +37,13 @@ router.patch("/:id", async (req, res) => {
   try {
     const _id = req.params.id;
     const getSuperstition = await schema.findByIdAndUpdate(_id, req.body);
-    res.status(200).send(getSuperstition);
+    if (getSuperstition) {
+      res.status(200).send(getSuperstition);
+    } else {
+      res.status(404).send("Superstition not found.");
+    }
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(500).send("Internal Server Error. Please try again later 😓.");
   }
 });
 
@@ -44,9 +51,13 @@ router.delete("/:id", async (req, res) => {
   try {
     const _id = req.params.id;
     const getSuperstition = await schema.findByIdAndDelete(_id);
-    res.status(200).send(getSuperstition);
+    if (getSuperstition) {
+      res.status(200).send(getSuperstition);
+    } else {
+      res.status(404).send("Superstition not found.");
+    }
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(500).send("Internal Server Error. Please try again later 😓.");
   }
 });
 
