@@ -9,7 +9,7 @@ const Footer = () => {
         </p>
       </div>
       <div className="flex gap-4">
-        <a href="#" className="text-gray-500 hover:text-black">
+        <a href="javascript:void(0);" className="text-gray-500 hover:text-black">
           <svg
             fill="currentColor"
             viewBox="0 0 24 24"
@@ -23,7 +23,7 @@ const Footer = () => {
             ></path>
           </svg>
         </a>
-        <a href="#" className="hover:text-black text-gray-500">
+        <a href="javascript:void(0);" className="hover:text-black text-gray-500">
           <svg
             fill="currentColor"
             viewBox="0 0 24 24"
@@ -37,7 +37,7 @@ const Footer = () => {
             ></path>
           </svg>
         </a>
-        <a href="#" className="text-gray-500 hover:text-black">
+        <a href="javascript:void(0);" className="text-gray-500 hover:text-black">
           <svg
             fill="currentColor"
             viewBox="0 0 24 24"

@@ -6,21 +6,21 @@ const Navbar = () => {
       <nav className="flex justify-between px-10 py-4">
         <div className="flex justify-evenly w-2/4">
           <a
-            href="#"
+            href="javascript:void(0);"
             className="text-[#5b21b6] text-xl font-semibold tracking-wider hover:font-bold hover:text-red-600"
           >
             ODD SUPERSTITIONS
           </a>
-          <a href="#" className="text-lg">
+          <a href="javascript:void(0);" className="text-lg">
             Home
           </a>
-          <a href="#" className="text-lg">
+          <a href="javascript:void(0);" className="text-lg">
             About
           </a>
-          <a href="#" className="text-lg">
+          <a href="javascript:void(0);" className="text-lg">
             FAQ
           </a>
-          <a href="#" className="text-lg">
+          <a href="javascript:void(0);" className="text-lg">
             Contact Us
           </a>
         </div>
