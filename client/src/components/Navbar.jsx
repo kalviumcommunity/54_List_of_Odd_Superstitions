@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Form from "./Form";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [showNavLinks, setShowNavLinks] = useState(false);
@@ -11,12 +13,12 @@ const Navbar = () => {
     <header>
       <nav className="flex h-[10vh]">
         <div className="flex justify-between items-center w-full md:w-full px-4">
-          <a
-            href="javascript:void(0);"
+          <Link
+            to={"/"}
             className="text-[#5b21b6] text-xl font-semibold tracking-wider hover:font-bold hover:text-red-600"
           >
             ODD SUPERSTITIONS
-          </a>
+          </Link>
           <button className="lg:hidden px-2 py-1" onClick={toggleNavLinks}>
             ☰
           </button>
@@ -26,18 +28,21 @@ const Navbar = () => {
             showNavLinks ? "block" : "hidden"
           }`}
         >
-          <a href="javascript:void(0);" className="md:text-lg">
+          <Link to={"/"} className="md:text-lg">
             Home
-          </a>
-          <a href="javascript:void(0);" className="md:text-lg">
+          </Link>
+          <Link to={"/about"} className="md:text-lg">
             About
-          </a>
-          <a href="javascript:void(0);" className="md:text-lg">
+          </Link>
+          <Link to={"/faq"} className="md:text-lg">
             FAQ
-          </a>
-          <a href="javascript:void(0);" className="md:text-lg">
+          </Link>
+          <Link to={"/contact"} className="md:text-lg">
             Contact Us
-          </a>
+          </Link>
+          <Link to={"/form"} className="md:text-lg">
+            Form
+          </Link>
           <button className="border-2 border-black rounded px-4 py-1 hover:bg-black hover:text-white h-fit">
             Login
           </button>
