@@ -1,3 +1,7 @@
-.form-container{
-    background-image: url("../assets/FormPage BG.jpg");
+.form-container {
+  background-image: url("../assets/FormPage BG.jpg");
+}
+
+form {
+  background: rgba(0, 0, 0, 0.1)
 }
