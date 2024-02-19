@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Form from "./Form";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -31,9 +30,6 @@ const Navbar = () => {
           <Link to={"/"} className="md:text-lg">
             Home
           </Link>
-          <Link to={"/about"} className="md:text-lg">
-            About
-          </Link>
           <Link to={"/faq"} className="md:text-lg">
             FAQ
           </Link>
@@ -42,6 +38,9 @@ const Navbar = () => {
           </Link>
           <Link to={"/form"} className="md:text-lg">
             Form
+          </Link>
+          <Link to={"/update-and-delete"} className="md:text-lg">
+            Edit
           </Link>
           <button className="border-2 border-black rounded px-4 py-1 hover:bg-black hover:text-white h-fit">
             Login

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { RotateLoader } from "react-spinners";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,6 +19,8 @@ const Form = () => {
     formState: { errors, isSubmitSuccessful, isSubmitted, isSubmitting },
   } = useForm();
 
+  const navigate = useNavigate();
+
   const submitHandler = async (formData) => {
     setData(formData);
     try {
@@ -30,7 +33,7 @@ const Form = () => {
       if (res.status === 201) {
         toast.success("Superstition Added Successfully!", {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
@@ -45,6 +48,9 @@ const Form = () => {
         );
       }
       reset();
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (error) {
       errorHandler(error.message);
     } finally {
@@ -55,7 +61,7 @@ const Form = () => {
   const errorHandler = (err) => {
     toast.error(err, {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 1500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: false,
