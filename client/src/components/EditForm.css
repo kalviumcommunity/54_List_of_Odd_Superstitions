@@ -1,0 +1,8 @@
+.edit-form-container{
+    background-image: url("../assets/Edit Form Background.jpg");
+    background-size: contain;
+}
+
+form {
+    background: rgba(0, 0, 0, 0.2)
+  }

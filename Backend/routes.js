@@ -18,6 +18,20 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const getSuperstition = await schema.findById(_id);
+    if (getSuperstition) {
+      res.status(200).send(getSuperstition);
+    } else {
+      res.status(404).send("No superstitions found.");
+    }
+  } catch (err) {
+    res.status(500).send("Internal Server Error. Please try again later 😓.");
+  }
+});
+
 router.post("/", async (req, res) => {
   try {
     // console.log(req.body);    //To check what is getting posted
