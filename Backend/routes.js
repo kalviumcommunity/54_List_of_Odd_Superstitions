@@ -1,9 +1,19 @@
 const express = require("express");
 const schema = require("./schema");
 const router = express.Router();
+const Joi = require("joi");
+const validationSchema = require("./uservalidation");
 
 const app = express();
 app.use(express.json());
+
+const validateRequest = (req, res, next) => {
+  const { error } = validationSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  next();
+};
 
 router.get("/", async (req, res) => {
   try {
@@ -32,7 +42,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validateRequest, async (req, res) => {
   try {
     // console.log(req.body);    //To check what is getting posted
     const newSuperstition = await schema.create(req.body);
@@ -47,7 +57,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", validateRequest, async (req, res) => {
   try {
     const _id = req.params.id;
     const getSuperstition = await schema.findByIdAndUpdate(_id, req.body);
