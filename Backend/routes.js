@@ -8,9 +8,10 @@ const app = express();
 app.use(express.json());
 
 const validateRequest = (req, res, next) => {
-  const { error } = validationSchema.validate(req.body);
+  const { error } = validationSchema.validate(req.body,{abortEarly:false});
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    const errorMessages = error.details.map(detail => detail.message);
+    return res.status(400).json({ error: errorMessages });
   }
   next();
 };
@@ -60,7 +61,7 @@ router.post("/", validateRequest, async (req, res) => {
 router.patch("/:id", validateRequest, async (req, res) => {
   try {
     const _id = req.params.id;
-    const getSuperstition = await schema.findByIdAndUpdate(_id, req.body);
+    const getSuperstition = await schema.findByIdAndUpdate(_id, req.body,{new:true});
     if (getSuperstition) {
       res.status(200).send(getSuperstition);
     } else {
