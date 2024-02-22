@@ -1,16 +1,16 @@
 const express = require("express");
 const schema = require("./schema");
 const router = express.Router();
-const Joi = require("joi");
+const mongoose = require("mongoose");
 const validationSchema = require("./uservalidation");
 
 const app = express();
 app.use(express.json());
 
 const validateRequest = (req, res, next) => {
-  const { error } = validationSchema.validate(req.body,{abortEarly:false});
+  const { error } = validationSchema.validate(req.body, { abortEarly: false });
   if (error) {
-    const errorMessages = error.details.map(detail => detail.message);
+    const errorMessages = error.details.map((detail) => detail.message);
     return res.status(400).json({ error: errorMessages });
   }
   next();
@@ -61,7 +61,12 @@ router.post("/", validateRequest, async (req, res) => {
 router.patch("/:id", validateRequest, async (req, res) => {
   try {
     const _id = req.params.id;
-    const getSuperstition = await schema.findByIdAndUpdate(_id, req.body,{new:true});
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res.status(400).send("Invalid ObjectId");
+    }
+    const getSuperstition = await schema.findByIdAndUpdate(_id, req.body, {
+      new: true,
+    });
     if (getSuperstition) {
       res.status(200).send(getSuperstition);
     } else {
@@ -75,6 +80,9 @@ router.patch("/:id", validateRequest, async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const _id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res.status(400).send("Invalid ObjectId");
+    }
     const getSuperstition = await schema.findByIdAndDelete(_id);
     if (getSuperstition) {
       res.status(200).send(getSuperstition);
