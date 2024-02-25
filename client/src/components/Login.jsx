@@ -8,7 +8,6 @@ import "react-toastify/dist/ReactToastify.css";
 const Form = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({ username: "", password: "" });
-  const [toastShown, setToastShown] = useState(false);
 
   const {
     register,
@@ -29,7 +28,7 @@ const Form = () => {
       // console.log(res);
       document.cookie = `token = ${res.data.token};expires=Tue, 29 Feb 2028 00:00:01 GMT`;
 
-      if (res.status === 201 && !toastShown) {
+      if (res.status === 201) {
         toast.success("User Login Successfully! Username added to cookies!!!", {
           position: "top-right",
           autoClose: 1500,
@@ -41,7 +40,6 @@ const Form = () => {
           theme: "dark",
           transition: Flip,
         });
-        setToastShown(true);
       } else {
         throw new Error("Failed to Add username. Please try agian later...");
       }
@@ -73,20 +71,17 @@ const Form = () => {
       return { username: "", password: "" };
     });
 
-    if (!toastShown) {
-      toast.info("Logout Successfully! Data removed from cookies!!!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Flip,
-      });
-      setToastShown(true);
-    }
+    toast.info("Logout Successfully! Data removed from cookies!!!", {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Flip,
+    });
   };
 
   return (
