@@ -4,8 +4,8 @@ const router = express.Router();
 require("dotenv").config();
 const mongoose = require("mongoose");
 const validationSchema = require("./uservalidation");
-const userModel = require("./userSchema")
-const jwt=require("jsonwebtoken")
+const userModel = require("./userSchema");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 app.use(express.json());
@@ -61,24 +61,34 @@ router.post("/", validateRequest, async (req, res) => {
   }
 });
 
-router.post("/login", async(req,res) => {
-  try{
-    const newUser = await userModel.create(req.body)
-    if(newUser){
-      const {username} =newUser;
-      const token=jwt.sign(username,process.env.SECRET_KEY);
-      res.status(201).json({token})
-    }else{
-      res.status(400).send("Failed to create new user.")
+router.get("/login", async (req, res) => {
+  try {
+    const getUserDetails = await userModel.find({});
+    if (getUserDetails.length > 0) {
+      res.status(200).send(getUserDetails);
+    } else {
+      res.status(404).send("No User found.");
     }
-  }catch(err){
-    console.log(err)
-    res.status(500).send("Internal Server Error. Please try again later 😓.")
+  } catch (err) {
+    res.status(500).send("Internal Server Error. Please try again later 😓.");
   }
-})
+});
 
-
-
+router.post("/login", async (req, res) => {
+  try {
+    const newUser = await userModel.create(req.body);
+    if (newUser) {
+      const { username } = newUser;
+      const token = jwt.sign(username, process.env.SECRET_KEY);
+      res.status(201).json({ token });
+    } else {
+      res.status(400).send("Failed to create new user.");
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Internal Server Error. Please try again later 😓.");
+  }
+});
 
 router.patch("/:id", validateRequest, async (req, res) => {
   try {
