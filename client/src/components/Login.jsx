@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { RotateLoader } from "react-spinners";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,14 +17,20 @@ const Form = () => {
     formState: { errors },
   } = useForm();
 
-  const submitHandler = (formData) => {
+  const submitHandler = async (formData) => {
     setData(formData);
     try {
       setIsLoading(true);
-      document.cookie = `username = ${formData.username};expires=Tue, 29 Feb 2028 00:00:01 GMT`;
-      document.cookie = `password = ${formData.password};expires=Tue, 29 Feb 2028 00:00.1 GMT`;
-      if (!toastShown) {
-        toast.success("User Login Successfully! Data added to cookies!!!", {
+      const res = await axios.post(
+        "https://odd-superstitions.onrender.com/superstition/login",
+        formData,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      // console.log(res);
+      document.cookie = `token = ${res.data.token};expires=Tue, 29 Feb 2028 00:00:01 GMT`;
+
+      if (res.status === 201 && !toastShown) {
+        toast.success("User Login Successfully! Username added to cookies!!!", {
           position: "top-right",
           autoClose: 1500,
           hideProgressBar: false,
@@ -35,6 +42,8 @@ const Form = () => {
           transition: Flip,
         });
         setToastShown(true);
+      } else {
+        throw new Error("Failed to Add username. Please try agian later...");
       }
       reset();
     } catch (error) {
@@ -44,11 +53,23 @@ const Form = () => {
     }
   };
 
+  const errorHandler = (err) => {
+    toast.error(err, {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Flip,
+    });
+  };
+
   const deleteCookie = () => {
     setData((prevData) => {
-      document.cookie = `username=${prevData.username};expires=Thu, 01 Jan 1970 00:00:01 GMT`;
-      document.cookie = `password=${prevData.password};expires=Thu, 01 Jan 1970 00:00:01 GMT`;
-
+      document.cookie = `token=${prevData};expires=Thu, 01 Jan 1970 00:00:01 GMT`;
       return { username: "", password: "" };
     });
 
@@ -69,7 +90,7 @@ const Form = () => {
   };
 
   return (
-    <div className="flex justify-center items-center login-bg">
+    <div className="flex justify-center items-center login-bg h-[75vh]">
       {isLoading && <RotateLoader color="#000000" />}
       {!isLoading && (
         <div className="flex flex-col pt-[5%] items-center h-[75vh] min-w-[20vw]">
