@@ -42,9 +42,9 @@ const Navbar = () => {
           <Link to={"/update-and-delete"} className="md:text-lg">
             Edit
           </Link>
-          <button className="border-2 border-black rounded px-4 py-1 hover:bg-black hover:text-white h-fit">
+          <Link to={"/login"} className="border-2 border-black rounded px-4 py-1 hover:bg-black hover:text-white h-fit">
             Login
-          </button>
+          </Link>
           <button className="border-2 border-black rounded px-4 py-1 hover:bg-black hover:text-white h-fit">
             Sign Up
           </button>
