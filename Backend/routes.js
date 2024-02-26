@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/v1/:id", async (req, res) => {
   try {
     const _id = req.params.id;
     const getSuperstition = await schema.findById(_id);
@@ -56,7 +56,6 @@ router.post("/", validateRequest, async (req, res) => {
       res.status(400).send("Failed to create new superstition.");
     }
   } catch (err) {
-    console.error(err.message);
     res.status(500).send("Internal Server Error. Please try again later 😓.");
   }
 });
@@ -85,7 +84,6 @@ router.post("/login", async (req, res) => {
       res.status(400).send("Failed to create new user.");
     }
   } catch (err) {
-    console.log(err);
     res.status(500).send("Internal Server Error. Please try again later 😓.");
   }
 });

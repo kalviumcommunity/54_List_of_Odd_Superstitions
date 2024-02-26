@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Form = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({ username: "", password: "" });
+  const [toastShown, setToastShown] = useState(false);
 
   const {
     register,
@@ -20,15 +21,15 @@ const Form = () => {
     setData(formData);
     try {
       setIsLoading(true);
+      setToastShown(true);
       const res = await axios.post(
         "https://odd-superstitions.onrender.com/superstition/login",
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
-      // console.log(res);
       document.cookie = `token = ${res.data.token};expires=Tue, 29 Feb 2028 00:00:01 GMT`;
 
-      if (res.status === 201) {
+      if (res.status === 201 && !toastShown) {
         toast.success("User Login Successfully! Username added to cookies!!!", {
           position: "top-right",
           autoClose: 1500,
@@ -40,6 +41,10 @@ const Form = () => {
           theme: "dark",
           transition: Flip,
         });
+        setToastShown(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } else {
         throw new Error("Failed to Add username. Please try agian later...");
       }
@@ -71,17 +76,23 @@ const Form = () => {
       return { username: "", password: "" };
     });
 
-    toast.info("Logout Successfully! Data removed from cookies!!!", {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      transition: Flip,
-    });
+    if (!toastShown) {
+      toast.info("Logout Successfully! Data removed from cookies!!!", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Flip,
+      });
+      setToastShown(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    }
   };
 
   return (

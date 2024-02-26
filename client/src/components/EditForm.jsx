@@ -25,7 +25,7 @@ const EditForm = ({ id }) => {
 
   const getDataById = async () => {
     const res = await axios.get(
-      `https://odd-superstitions.onrender.com/superstition/${id}`
+      `https://odd-superstitions.onrender.com/superstition/v1/${id}`
     );
     setTitle(res.data.title);
     setDescription(res.data.description);
@@ -39,7 +39,7 @@ const EditForm = ({ id }) => {
     try {
       setIsLoading(true);
       const res = await axios.patch(
-        `https://odd-superstitions.onrender.com/superstition/${id}`,
+        `https://odd-superstitions.onrender.com/superstition/v1/${id}`,
         formData
       );
       setTitle(res.data.title);
