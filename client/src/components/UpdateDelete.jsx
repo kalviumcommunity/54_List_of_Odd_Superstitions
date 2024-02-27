@@ -31,7 +31,7 @@ const UpdateDelete = () => {
 
   const handleDeleteById = async (id) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const res = await axios.delete(`${API_URI}/${id}`);
       if (res.status === 200) {
         toast.success("Superstition Deleted Successfully!", {

@@ -8,7 +8,6 @@ import "react-toastify/dist/ReactToastify.css";
 const Form = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({ username: "", password: "" });
-  const [toastShown, setToastShown] = useState(false);
 
   const {
     register,
@@ -21,15 +20,15 @@ const Form = () => {
     setData(formData);
     try {
       setIsLoading(true);
-      setToastShown(true);
       const res = await axios.post(
-        "https://odd-superstitions.onrender.com/superstition/login",
+        "http://localhost:3000/superstition/login",
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
-      document.cookie = `token = ${res.data.token};expires=Tue, 29 Feb 2028 00:00:01 GMT`;
+      console.log(res);
+      document.cookie = `token = ${res.data.user.username};expires=Tue, 29 Feb 2028 00:00:01 GMT`;
 
-      if (res.status === 201 && !toastShown) {
+      if (res.status === 201) {
         toast.success("User Login Successfully! Username added to cookies!!!", {
           position: "top-right",
           autoClose: 1500,
@@ -41,7 +40,6 @@ const Form = () => {
           theme: "dark",
           transition: Flip,
         });
-        setToastShown(true);
         setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -50,7 +48,47 @@ const Form = () => {
       }
       reset();
     } catch (error) {
-      errorHandler(error.message);
+      if (error.response) {
+        if (error.response.status === 400) {
+          const errorMessage = error.response.data;
+
+          if (errorMessage === "Incorrect Password!") {
+            toast.error("Incorrect Password!", {
+              position: "top-right",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              transition: Flip,
+            });
+          } else if (
+            errorMessage ===
+            "No user found with this username. Please Signup before logging in!!"
+          ) {
+            toast.warning(
+              "No user found with this username. Please Signup before logging in!!",
+              {
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Flip,
+              }
+            );
+          }
+        } else {
+          errorHandler(error.message);
+        }
+      } else {
+        errorHandler(error.message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -76,23 +114,20 @@ const Form = () => {
       return { username: "", password: "" };
     });
 
-    if (!toastShown) {
-      toast.info("Logout Successfully! Data removed from cookies!!!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Flip,
-      });
-      setToastShown(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }
+    toast.info("Logout Successfully! Data removed from cookies!!!", {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Flip,
+    });
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   };
 
   return (
@@ -104,7 +139,7 @@ const Form = () => {
           <h2 className="self-start font-black text-3xl py-3">Welcome Back!</h2>
           <form
             onSubmit={handleSubmit(submitHandler)}
-            className="flex flex-col justify-center items-center border-2 rounded-xl border-gray-500 p-[3%] lg:px-[2%] lg:py-[2%]"
+            className="flex flex-col justify-center items-center border-2 rounded-xl border-gray-500 p-[3%] lg:p-[2%]"
           >
             <div className="my-2">
               <div className="group relative w-72 md:w-80 lg:w-96">
