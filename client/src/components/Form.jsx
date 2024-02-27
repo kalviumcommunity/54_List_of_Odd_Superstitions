@@ -11,25 +11,58 @@ const Form = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
+  // Function to get the value of cookie
+  function getCookieValue(name) {
+    const cookies = document.cookie.split(";");
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + "=")) {
+        return cookie.substring(name.length + 1);
+      }
+    }
+    return null;
+  }
+  const created_by = getCookieValue("token");
+
   const {
     register,
     handleSubmit,
-    watch,
     reset,
-    formState: { errors, isSubmitSuccessful, isSubmitted, isSubmitting },
+    formState: { errors },
   } = useForm();
 
   const navigate = useNavigate();
 
   const submitHandler = async (formData) => {
-    setData(formData);
+    if (!created_by) {
+      toast.warning("Please Log in before adding the data!!!", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Flip,
+      });
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
+      return;
+    }
+    const formDataWithUsername = { ...formData, created_by };
+    setData(formDataWithUsername);
+
     try {
       setIsLoading(true);
       const res = await axios.post(
-        "https://odd-superstitions.onrender.com/superstition",
-        formData,
+        "http://localhost:3000/superstition",
+        formDataWithUsername,
         { headers: { "Content-Type": "application/json" } }
       );
+      console.log(res);
       if (res.status === 201) {
         toast.success("Superstition Added Successfully!", {
           position: "top-right",

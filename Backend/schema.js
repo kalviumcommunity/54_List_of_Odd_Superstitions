@@ -9,6 +9,10 @@ const superstitionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  created_by: {
+    type: String,
+    required: true,
+  },
 });
 
 const schema = mongoose.model("superstitions", superstitionSchema);

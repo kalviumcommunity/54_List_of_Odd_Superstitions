@@ -23,12 +23,12 @@ router.get("/", async (req, res) => {
   try {
     const getSuperstition = await schema.find({});
     if (getSuperstition.length > 0) {
-      res.status(200).send(getSuperstition);
+      return res.status(200).send(getSuperstition);
     } else {
-      res.status(404).send("No superstitions found.");
+      return res.status(404).send("No superstitions found.");
     }
   } catch (err) {
-    res.status(500).send("Internal Server Error. Please try again later 😓.");
+    return res.status(500).send("Internal Server Error.", err);
   }
 });
 
@@ -37,12 +37,12 @@ router.get("/v1/:id", async (req, res) => {
     const _id = req.params.id;
     const getSuperstition = await schema.findById(_id);
     if (getSuperstition) {
-      res.status(200).send(getSuperstition);
+      return res.status(200).send(getSuperstition);
     } else {
-      res.status(404).send("No superstitions found.");
+      return res.status(404).send("No superstitions found.");
     }
   } catch (err) {
-    res.status(500).send("Internal Server Error. Please try again later 😓.");
+    return res.status(500).send("Internal Server Error.", err);
   }
 });
 
@@ -51,40 +51,72 @@ router.post("/", validateRequest, async (req, res) => {
     // console.log(req.body);    //To check what is getting posted
     const newSuperstition = await schema.create(req.body);
     if (newSuperstition) {
-      res.status(201).json(newSuperstition);
+      return res.status(201).json(newSuperstition);
     } else {
-      res.status(400).send("Failed to create new superstition.");
+      return res.status(400).send("Failed to create new superstition.");
     }
   } catch (err) {
-    res.status(500).send("Internal Server Error. Please try again later 😓.");
+    return res.status(500).send("Internal Server Error.", err);
   }
 });
 
-router.get("/login", async (req, res) => {
+router.get("/signup", async (req, res) => {
   try {
     const getUserDetails = await userModel.find({});
     if (getUserDetails.length > 0) {
-      res.status(200).send(getUserDetails);
+      return res.status(200).send(getUserDetails);
     } else {
-      res.status(404).send("No User found.");
+      return res
+        .status(404)
+        .send("No User found with this username. Please Sign up first...");
     }
   } catch (err) {
-    res.status(500).send("Internal Server Error. Please try again later 😓.");
+    return res.status(500).send("Internal Server Error.", err);
+  }
+});
+
+router.post("/signup", async (req, res) => {
+  try {
+    const { username } = req.body;
+    const existingUser = await userModel.findOne({ username });
+    if (existingUser) {
+      return res.status(400).send("User already exists with this username.");
+    }
+    const newUser = await userModel.create(req.body);
+    if (newUser) {
+      const token = jwt.sign({ username }, process.env.SECRET_KEY);
+      return res.status(201).json({ newUser, token });
+    } else {
+      return res.status(400).send("Failed to create new user.");
+    }
+  } catch (err) {
+    return res.status(500).send(`Internal Server Error. ${err}`);
   }
 });
 
 router.post("/login", async (req, res) => {
   try {
-    const newUser = await userModel.create(req.body);
-    if (newUser) {
-      const { username } = newUser;
-      const token = jwt.sign(username, process.env.SECRET_KEY);
-      res.status(201).json({ token });
+    const { username, password } = req.body;
+    const user = await userModel.findOne({ username });
+    if (user) {
+      if (user.password === password) {
+        const token = jwt.sign(
+          { username: user.username },
+          process.env.SECRET_KEY
+        );
+        res.status(201).json({ user, token });
+      } else {
+        res.status(400).send("Incorrect Password!");
+      }
     } else {
-      res.status(400).send("Failed to create new user.");
+      res
+        .status(400)
+        .send(
+          "No user found with this username. Please Signup before logging in!!"
+        );
     }
   } catch (err) {
-    res.status(500).send("Internal Server Error. Please try again later 😓.");
+    res.status(500).send("Internal Server Error.", err);
   }
 });
 
@@ -103,7 +135,7 @@ router.patch("/:id", validateRequest, async (req, res) => {
       res.status(404).send("Superstition not found.");
     }
   } catch (err) {
-    res.status(500).send("Internal Server Error. Please try again later 😓.");
+    res.status(500).send("Internal Server Error.", err);
   }
 });
 
@@ -120,7 +152,7 @@ router.delete("/:id", async (req, res) => {
       res.status(404).send("Superstition not found.");
     }
   } catch (err) {
-    res.status(500).send("Internal Server Error. Please try again later 😓.");
+    res.status(500).send("Internal Server Error.", err);
   }
 });
 

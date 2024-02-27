@@ -160,7 +160,7 @@ const EditForm = ({ id }) => {
             <div className=" mt-1 flex justify-around w-full">
               <input
                 type="submit"
-                value={"Add Superstition"}
+                value={"Update Superstition"}
                 className="border-2 hover:bg-green-500 hover:text-white border-green-500 px-4 py-2"
               />
               <button
