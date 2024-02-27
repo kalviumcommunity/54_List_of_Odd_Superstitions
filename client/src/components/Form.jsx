@@ -58,7 +58,7 @@ const Form = () => {
     try {
       setIsLoading(true);
       const res = await axios.post(
-        "http://localhost:3000/superstition",
+        "https://odd-superstitions.onrender.com/superstition",
         formDataWithUsername,
         { headers: { "Content-Type": "application/json" } }
       );

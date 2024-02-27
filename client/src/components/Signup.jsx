@@ -24,7 +24,7 @@ const Signup = () => {
     try {
       setIsLoading(true);
       const res = await axios.post(
-        "http://localhost:3000/superstition/signup",
+        "https://odd-superstitions.onrender.com/superstition/signup",
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -51,7 +51,6 @@ const Signup = () => {
       }
       reset();
     } catch (error) {
-      console.log("error: ", error);
       if (error.response && error.response.status === 400) {
         toast.error("User already exists with this username.", {
           position: "top-right",

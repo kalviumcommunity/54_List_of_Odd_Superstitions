@@ -8,7 +8,7 @@ const AppProvider = ({ children }) => {
   const [value, setValue] = useState("");
   useEffect(() => {
     axios
-      .get("http://localhost:3000/superstition/signup")
+      .get("https://odd-superstitions.onrender.com/superstition/signup")
       .then((res) => setUsers(res.data));
   }, []);
 
